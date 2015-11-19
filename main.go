@@ -15,6 +15,9 @@ const (
 	breakTime    = 5 * time.Second
 )
 
+// TODO: progress bar per pomodoro
+// TODO: msg per pomodoro
+// TODO: remove break pomodoros
 type Pomodoro struct {
 	bar     *uiprogress.Bar
 	running bool
@@ -52,6 +55,9 @@ func (p *Pomodoro) Run(duration int) bool {
 	tick := time.NewTicker(time.Second / 10)
 	p.running = true
 	p.bar = uiprogress.AddBar(10 * duration).AppendCompleted().PrependElapsed()
+	/*.PrependFunc(func(b *uiprogress.Bar) string {
+		return p.msg + ": "
+	})*/
 
 	defer func() {
 		tick.Stop()
@@ -62,14 +68,13 @@ func (p *Pomodoro) Run(duration int) bool {
 	for {
 		select {
 		case <-tick.C:
-			if p.bar.Current() == duration {
+			p.bar.Set(p.bar.Current() + 1)
+			if p.bar.Current() >= 10*duration {
 				p.running = false
 				close(p.done)
 				return true
 			}
-			p.bar.Set(p.bar.Current() + 1)
 		case <-p.done:
-			p.running = false
 			return false
 		}
 	}
