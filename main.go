@@ -49,9 +49,9 @@ func NewPomodoro() *Pomodoro {
 }
 
 func (p *Pomodoro) Run(duration int) bool {
-	tick := time.NewTicker(time.Second)
+	tick := time.NewTicker(time.Second / 10)
 	p.running = true
-	p.bar = uiprogress.AddBar(duration).AppendCompleted().PrependElapsed()
+	p.bar = uiprogress.AddBar(10 * duration).AppendCompleted().PrependElapsed()
 
 	defer func() {
 		tick.Stop()
@@ -84,7 +84,9 @@ func (p *Pomodoro) Stop() bool {
 }
 
 func main() {
+	print("\033[H\033[2J")
 	stdin := bufio.NewReader(os.Stdin)
+
 	pomodoro := NewPomodoro()
 	for {
 		// Pomodoro.

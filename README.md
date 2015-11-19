@@ -3,6 +3,7 @@
 ## Installation
 
 ```bash
+go get -u github.com/gosuri/uiprogress
 go get -u github.com/VojtechVitek/pomodoro
 ```
 
